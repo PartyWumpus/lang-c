@@ -1618,17 +1618,7 @@ pub fn visit_gnu_asm_operand<'ast, V: Visit<'ast> + ?Sized>(
     gnu_asm_operand: &'ast GnuAsmOperand,
     _span: &'ast Span,
 ) {
-    if let Some(ref name) = gnu_asm_operand.symbolic_name {
-        visitor.visit_identifier(&name.node, &name.span);
-    }
-    visitor.visit_string_literal(
-        &gnu_asm_operand.constraints.node,
-        &gnu_asm_operand.constraints.span,
-    );
-    visitor.visit_expression(
-        &gnu_asm_operand.variable_name.node,
-        &gnu_asm_operand.variable_name.span,
-    );
+    // FIXME: i don't use visiting so
 }
 
 pub fn visit_type_of<'ast, V: Visit<'ast> + ?Sized>(

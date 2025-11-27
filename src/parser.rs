@@ -16595,87 +16595,72 @@ fn __parse_asm_operand_list<'input>(__input: &'input str, __state: &mut ParseSta
 fn __parse_asm_operand<'input>(__input: &'input str, __state: &mut ParseState<'input>, __pos: usize, env: &mut Env) -> RuleResult<GnuAsmOperand> {
     #![allow(non_snake_case, unused)]
     {
-        let __seq_res = match {
-            let __seq_res = slice_eq(__input, __state, __pos, "[");
-            match __seq_res {
-                Matched(__pos, _) => {
-                    let __seq_res = __parse__(__input, __state, __pos, env);
-                    match __seq_res {
-                        Matched(__pos, _) => {
-                            let __seq_res = __parse_identifier(__input, __state, __pos, env);
-                            match __seq_res {
-                                Matched(__pos, i) => {
-                                    let __seq_res = __parse__(__input, __state, __pos, env);
-                                    match __seq_res {
-                                        Matched(__pos, _) => {
-                                            let __seq_res = slice_eq(__input, __state, __pos, "]");
-                                            match __seq_res {
-                                                Matched(__pos, _) => {
-                                                    let __seq_res = __parse__(__input, __state, __pos, env);
-                                                    match __seq_res {
-                                                        Matched(__pos, _) => Matched(__pos, { i }),
-                                                        Failed => Failed,
-                                                    }
-                                                }
-                                                Failed => Failed,
-                                            }
-                                        }
-                                        Failed => Failed,
-                                    }
-                                }
-                                Failed => Failed,
-                            }
-                        }
-                        Failed => Failed,
-                    }
-                }
-                Failed => Failed,
-            }
-        } {
-            Matched(__newpos, __value) => Matched(__newpos, Some(__value)),
-            Failed => Matched(__pos, None),
-        };
+        let __seq_res = slice_eq(__input, __state, __pos, "[");
         match __seq_res {
-            Matched(__pos, i) => {
-                let __seq_res = __parse_string_literal(__input, __state, __pos, env);
+            Matched(__pos, _) => {
+                let __seq_res = __parse__(__input, __state, __pos, env);
                 match __seq_res {
-                    Matched(__pos, s) => {
-                        let __seq_res = __parse__(__input, __state, __pos, env);
+                    Matched(__pos, _) => {
+                        let __seq_res = slice_eq(__input, __state, __pos, "\"");
                         match __seq_res {
                             Matched(__pos, _) => {
-                                let __seq_res = slice_eq(__input, __state, __pos, "(");
+                                let __seq_res = __parse_asm_location(__input, __state, __pos, env);
                                 match __seq_res {
-                                    Matched(__pos, _) => {
-                                        let __seq_res = __parse__(__input, __state, __pos, env);
+                                    Matched(__pos, i) => {
+                                        let __seq_res = slice_eq(__input, __state, __pos, "\"");
                                         match __seq_res {
                                             Matched(__pos, _) => {
-                                                let __seq_res = {
-                                                    let __seq_res = Matched(__pos, __pos);
-                                                    match __seq_res {
-                                                        Matched(__pos, l) => {
-                                                            let __seq_res = __parse_expression0(__input, __state, __pos, env);
-                                                            match __seq_res {
-                                                                Matched(__pos, e) => {
-                                                                    let __seq_res = Matched(__pos, __pos);
-                                                                    match __seq_res {
-                                                                        Matched(__pos, r) => Matched(__pos, { Node::new(e, Span::span(l, r)) }),
-                                                                        Failed => Failed,
-                                                                    }
-                                                                }
-                                                                Failed => Failed,
-                                                            }
-                                                        }
-                                                        Failed => Failed,
-                                                    }
-                                                };
+                                                let __seq_res = __parse__(__input, __state, __pos, env);
                                                 match __seq_res {
-                                                    Matched(__pos, e) => {
-                                                        let __seq_res = __parse__(__input, __state, __pos, env);
+                                                    Matched(__pos, _) => {
+                                                        let __seq_res = slice_eq(__input, __state, __pos, "(");
                                                         match __seq_res {
                                                             Matched(__pos, _) => {
-                                                                let __seq_res = slice_eq(__input, __state, __pos, ")");
+                                                                let __seq_res = __parse__(__input, __state, __pos, env);
                                                                 match __seq_res {
-                                                                    Matched(__pos, _) => Matched(__pos, { GnuAsmOperand { symbolic_name: i, constraints: s, variable_name: e } }),
+                                                                    Matched(__pos, _) => {
+                                                                        let __seq_res = {
+                                                                            let __seq_res = Matched(__pos, __pos);
+                                                                            match __seq_res {
+                                                                                Matched(__pos, l) => {
+                                                                                    let __seq_res = __parse_expression0(__input, __state, __pos, env);
+                                                                                    match __seq_res {
+                                                                                        Matched(__pos, e) => {
+                                                                                            let __seq_res = Matched(__pos, __pos);
+                                                                                            match __seq_res {
+                                                                                                Matched(__pos, r) => Matched(__pos, { Node::new(e, Span::span(l, r)) }),
+                                                                                                Failed => Failed,
+                                                                                            }
+                                                                                        }
+                                                                                        Failed => Failed,
+                                                                                    }
+                                                                                }
+                                                                                Failed => Failed,
+                                                                            }
+                                                                        };
+                                                                        match __seq_res {
+                                                                            Matched(__pos, e) => {
+                                                                                let __seq_res = __parse__(__input, __state, __pos, env);
+                                                                                match __seq_res {
+                                                                                    Matched(__pos, _) => {
+                                                                                        let __seq_res = slice_eq(__input, __state, __pos, ")");
+                                                                                        match __seq_res {
+                                                                                            Matched(__pos, _) => {
+                                                                                                let __seq_res = slice_eq(__input, __state, __pos, "]");
+                                                                                                match __seq_res {
+                                                                                                    Matched(__pos, _) => Matched(__pos, { GnuAsmOperand { asm_location: i, value: e } }),
+                                                                                                    Failed => Failed,
+                                                                                                }
+                                                                                            }
+                                                                                            Failed => Failed,
+                                                                                        }
+                                                                                    }
+                                                                                    Failed => Failed,
+                                                                                }
+                                                                            }
+                                                                            Failed => Failed,
+                                                                        }
+                                                                    }
                                                                     Failed => Failed,
                                                                 }
                                                             }
@@ -16697,6 +16682,59 @@ fn __parse_asm_operand<'input>(__input: &'input str, __state: &mut ParseState<'i
                     Failed => Failed,
                 }
             }
+            Failed => Failed,
+        }
+    }
+}
+
+fn __parse_asm_location<'input>(__input: &'input str, __state: &mut ParseState<'input>, __pos: usize, env: &mut Env) -> RuleResult<String> {
+    #![allow(non_snake_case, unused)]
+    {
+        let __seq_res = {
+            let str_start = __pos;
+            match {
+                let __choice_res = {
+                    let __seq_res = slice_eq(__input, __state, __pos, "r");
+                    match __seq_res {
+                        Matched(__pos, _) => {
+                            let __seq_res = if __input.len() > __pos {
+                                let (__ch, __next) = char_range_at(__input, __pos);
+                                match __ch {
+                                    '0'...'9' => Matched(__next, ()),
+                                    _ => __state.mark_failure(__pos, "[0-9]"),
+                                }
+                            } else {
+                                __state.mark_failure(__pos, "[0-9]")
+                            };
+                            match __seq_res {
+                                Matched(__pos, _) => {
+                                    if __input.len() > __pos {
+                                        let (__ch, __next) = char_range_at(__input, __pos);
+                                        match __ch {
+                                            '0'...'9' => Matched(__next, ()),
+                                            _ => __state.mark_failure(__pos, "[0-9]"),
+                                        }
+                                    } else {
+                                        __state.mark_failure(__pos, "[0-9]")
+                                    }
+                                }
+                                Failed => Failed,
+                            }
+                        }
+                        Failed => Failed,
+                    }
+                };
+                match __choice_res {
+                    Matched(__pos, __value) => Matched(__pos, __value),
+                    Failed => slice_eq(__input, __state, __pos, "bstack"),
+                }
+            } {
+                Matched(__newpos, _) => Matched(__newpos, &__input[str_start..__newpos]),
+                Failed => Failed,
+            }
+        };
+        match __seq_res {
+            Matched(__pos, n) => Matched(__pos, { String::from(n) }),
             Failed => Failed,
         }
     }

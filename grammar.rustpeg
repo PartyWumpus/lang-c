@@ -1299,13 +1299,15 @@ asm_ext<e, t> = ":" _ e:e _ t:t? { (e, t.unwrap_or_default()) }
 asm_operand_list -> Vec<Node<GnuAsmOperand>> = cs0<node<asm_operand>>
 
 asm_operand -> GnuAsmOperand =
-    i:("[" _ i:identifier _ "]" _ {i})? s:string_literal _ "(" _ e:node<expression0> _ ")" {
+    "[" _ "\"" i:asm_location "\"" _ "(" _ e:node<expression0> _ ")" "]" {
         GnuAsmOperand {
-            symbolic_name: i,
-            constraints: s,
-            variable_name: e,
+            asm_location: i,
+            value: e,
         }
     }
+
+asm_location -> String =
+    n:$("r" [0-9][0-9] / "bstack") { String::from(n) }
 
 ////
 // GNU expression extensions

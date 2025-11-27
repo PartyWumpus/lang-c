@@ -1278,9 +1278,8 @@ pub struct GnuExtendedAsmStatement {
 /// [GNU extension](https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Output-Operands)
 #[derive(Debug, PartialEq, Clone)]
 pub struct GnuAsmOperand {
-    pub symbolic_name: Option<Node<Identifier>>,
-    pub constraints: Node<StringLiteral>,
-    pub variable_name: Node<Expression>,
+    pub asm_location: String,
+    pub value: Node<Expression>,
 }
 
 /// Type of an expression or type

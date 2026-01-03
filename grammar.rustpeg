@@ -175,7 +175,7 @@ escape_sequence = "\\" (['"?\\abfnrtv] / oct*<1,3> / "x" hex+)
 // 6.4.5 String literal
 ////
 
-pub string_literal -> Node<Vec<String>> = s:node<list1<string_literal0>> { s }
+pub string_literal -> Node<Vec<Node<String>>> = s:node<list1<node<string_literal0>>> { s }
 
 string_literal0 -> String =
     s:$(encoding_prefix? "\"" string_char* "\"") { String::from(s) }

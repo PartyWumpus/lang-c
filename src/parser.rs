@@ -1604,7 +1604,7 @@ fn __parse_escape_sequence<'input>(__input: &'input str, __state: &mut ParseStat
     }
 }
 
-fn __parse_string_literal<'input>(__input: &'input str, __state: &mut ParseState<'input>, __pos: usize, env: &mut Env) -> RuleResult<Node<Vec<String>>> {
+fn __parse_string_literal<'input>(__input: &'input str, __state: &mut ParseState<'input>, __pos: usize, env: &mut Env) -> RuleResult<Node<Vec<Node<String>>>> {
     #![allow(non_snake_case, unused)]
     {
         let __seq_res = {
@@ -1626,7 +1626,25 @@ fn __parse_string_literal<'input>(__input: &'input str, __state: &mut ParseState
                                 } else {
                                     __pos
                                 };
-                                let __step_res = __parse_string_literal0(__input, __state, __pos, env);
+                                let __step_res = {
+                                    let __seq_res = Matched(__pos, __pos);
+                                    match __seq_res {
+                                        Matched(__pos, l) => {
+                                            let __seq_res = __parse_string_literal0(__input, __state, __pos, env);
+                                            match __seq_res {
+                                                Matched(__pos, e) => {
+                                                    let __seq_res = Matched(__pos, __pos);
+                                                    match __seq_res {
+                                                        Matched(__pos, r) => Matched(__pos, { Node::new(e, Span::span(l, r)) }),
+                                                        Failed => Failed,
+                                                    }
+                                                }
+                                                Failed => Failed,
+                                            }
+                                        }
+                                        Failed => Failed,
+                                    }
+                                };
                                 match __step_res {
                                     Matched(__newpos, __value) => {
                                         __repeat_pos = __newpos;
@@ -17892,7 +17910,7 @@ pub fn constant<'input>(__input: &'input str, env: &mut Env) -> ParseResult<Cons
     Err(ParseError { line: __line, column: __col, offset: __state.max_err_pos, expected: __state.expected })
 }
 
-pub fn string_literal<'input>(__input: &'input str, env: &mut Env) -> ParseResult<Node<Vec<String>>> {
+pub fn string_literal<'input>(__input: &'input str, env: &mut Env) -> ParseResult<Node<Vec<Node<String>>>> {
     #![allow(non_snake_case, unused)]
     let mut __state = ParseState::new();
     match __parse_string_literal(__input, &mut __state, 0, env) {

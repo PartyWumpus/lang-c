@@ -148,7 +148,7 @@ pub enum FloatFormat {
 /// String literal
 ///
 /// (C11 6.4.5)
-pub type StringLiteral = Vec<String>;
+pub type StringLiteral = Vec<Node<String>>;
 
 // From 6.5 Expressions
 

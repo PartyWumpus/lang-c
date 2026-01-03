@@ -69,7 +69,7 @@ impl<'ast, 'a> Visit<'ast> for Printer<'a> {
                 self.field("Character");
                 self.field(c);
             }
-            _ => {},
+            _ => {}
         }
 
         visit_constant(&mut self.block(), n, span);
@@ -133,7 +133,7 @@ impl<'ast, 'a> Visit<'ast> for Printer<'a> {
         self.w.write_str(" [").unwrap();
         let mut comma = false;
         for p in n {
-            self.field_str_ext(if comma { ", " } else { "" }, p);
+            self.field_str_ext(if comma { ", " } else { "" }, &p.node);
             comma = true;
         }
         self.w.write_str("]").unwrap();
